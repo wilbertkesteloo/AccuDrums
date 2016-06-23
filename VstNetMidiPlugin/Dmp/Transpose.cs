@@ -1,7 +1,7 @@
 ﻿using Jacobi.Vst.Framework;
 using Jacobi.Vst.Core;
 
-namespace VstNetMidiPlugin.Dmp
+namespace Accudrums.Dmp
 {
     internal sealed class Transpose
     {

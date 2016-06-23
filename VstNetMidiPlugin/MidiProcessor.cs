@@ -1,9 +1,11 @@
 ﻿using Jacobi.Vst.Core;
 using Jacobi.Vst.Framework;
 using Jacobi.Vst.Framework.Plugin;
-using VstNetMidiPlugin.Dmp;
+using Accudrums.Dmp;
+using System.Linq;
+using System.Media;
 
-namespace VstNetMidiPlugin {
+namespace Accudrums {
     /// <summary>
     /// This object performs midi processing for your plugin.
     /// </summary>
@@ -64,6 +66,9 @@ namespace VstNetMidiPlugin {
             // a plugin must implement IVstPluginMidiSource or this call will throw an exception.
             IVstMidiProcessor midiHost = _plugin.Host.GetInstance<IVstMidiProcessor>();
 
+            //Hieronder een implementatie van een Audio-Uit of audioprocessor opvragen
+
+
             // always expect some hosts not to support this.
             if (midiHost != null) {
                 VstEventCollection outEvents = new VstEventCollection();
@@ -74,8 +79,31 @@ namespace VstNetMidiPlugin {
                         case VstEventTypes.MidiEvent:
                             VstMidiEvent midiEvent = (VstMidiEvent)evnt;
 
+                            //General midi effects for all inputs 
                             midiEvent = Gain.ProcessEvent(midiEvent);
                             midiEvent = Transpose.ProcessEvent(midiEvent);
+
+                            //Hier ergens midi noot koppelen aan audio output
+                            if (MidiHelper.IsNoteOn(midiEvent.Data)) {
+                                _plugin.PluginEditor.CurrentNote("ON " + midiEvent.Data[1].ToString() + " " + midiEvent.Data[2].ToString() + " " + midiEvent.Data[3].ToString());
+
+                                if (midiEvent.Data[1] == 60) {
+                                    //kickdrum afspelen
+                                    _plugin.PluginEditor.PlayKick();
+
+                                    //Audio event hier uitsturen?? hoe??
+                                    SoundPlayer player = new SoundPlayer(@"C:\Github\repositories\AccuDrums\VstNetMidiPlugin\Sounds\bd2.wav");
+                                    player.Play();
+                                }
+
+                            } else if (MidiHelper.IsNoteOff(midiEvent.Data)) {
+                                _plugin.PluginEditor.CurrentNote("OFF " + midiEvent.Data[1].ToString() + " " + midiEvent.Data[2].ToString() + " " + midiEvent.Data[3].ToString());
+
+                                if (midiEvent.Data[1] == 60) {
+                                    //kickdrum stoppen
+                                    _plugin.PluginEditor.StopKick();
+                                }
+                            }
 
                             outEvents.Add(midiEvent);
                             break;
@@ -87,6 +115,9 @@ namespace VstNetMidiPlugin {
                 }
 
                 midiHost.Process(outEvents);
+
+                //Hier events naar een audiohost sturen (denk ik??)
+
             }
 
             // Clear the cache, we've processed the events.

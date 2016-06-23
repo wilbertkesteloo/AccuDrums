@@ -26,6 +26,7 @@ namespace VstNetAudioPlugin
         private Plugin _plugin;
         private IVstHostSequencer _sequencer;
         private VstTimeInfoFlags _defaultTimeInfoFlags;
+        
 
         /// <summary>
         /// Default constructor.
@@ -34,7 +35,7 @@ namespace VstNetAudioPlugin
             : base(AudioInputCount, AudioOutputCount, InitialTailSize)
         {
             _plugin = plugin;
-
+           
             // TODO: We use one delay object to process two audio channels.
             // Typically you would use dedicated DSP objects for each channel.
             Delay = new Delay(plugin);

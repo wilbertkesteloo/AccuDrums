@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VstNetMidiPlugin", "VstNetMidiPlugin\VstNetMidiPlugin.csproj", "{A3CF0E19-E753-4BC5-9EBD-B261267C151F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accudrums", "VstNetMidiPlugin\Accudrums.csproj", "{A3CF0E19-E753-4BC5-9EBD-B261267C151F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VstNetAudioPlugin", "VstNetAudioPlugin\VstNetAudioPlugin.csproj", "{C465AC32-54E0-450C-9C24-FB6A50039AB0}"
 EndProject

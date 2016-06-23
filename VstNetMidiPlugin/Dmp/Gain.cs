@@ -1,7 +1,7 @@
 ﻿using Jacobi.Vst.Core;
 using Jacobi.Vst.Framework;
 
-namespace VstNetMidiPlugin.Dmp
+namespace Accudrums.Dmp
 {
     internal sealed class Gain
     {

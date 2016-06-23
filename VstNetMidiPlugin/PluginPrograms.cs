@@ -1,7 +1,7 @@
 ﻿using Jacobi.Vst.Framework;
 using Jacobi.Vst.Framework.Plugin;
 
-namespace VstNetMidiPlugin
+namespace Accudrums
 {
     /// <summary>
     /// This object manages the Plugin programs and its parameters.

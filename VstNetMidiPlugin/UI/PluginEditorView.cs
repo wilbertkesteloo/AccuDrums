@@ -2,7 +2,7 @@
 using Jacobi.Vst.Framework;
 using System.Collections.Generic;
 
-namespace VstNetMidiPlugin.UI {
+namespace Accudrums.UI {
     public partial class PluginEditorView : UserControl {
         public PluginEditorView() {
             InitializeComponent();

@@ -1,4 +1,4 @@
-﻿namespace VstNetMidiPlugin.UI
+﻿namespace Accudrums.UI
 {
     partial class PluginEditorView
     {

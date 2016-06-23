@@ -1,4 +1,4 @@
-﻿namespace VstNetMidiPlugin.Dmp
+﻿namespace Accudrums.Dmp
 {
     internal static class MidiHelper
     {

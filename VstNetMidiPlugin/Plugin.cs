@@ -2,13 +2,11 @@
 using Jacobi.Vst.Framework;
 using Jacobi.Vst.Framework.Plugin;
 
-namespace VstNetMidiPlugin
-{
+namespace Accudrums {
     /// <summary>
     /// The Plugin root object.
     /// </summary>
-    internal sealed class Plugin : VstPluginWithInterfaceManagerBase
-    {
+    internal sealed class Plugin : VstPluginWithInterfaceManagerBase {
         /// <summary>
         /// TODO: assign a unique plugin.
         /// </summary>
@@ -34,45 +32,47 @@ namespace VstNetMidiPlugin
         /// Initializes the one an only instance of the Plugin root object.
         /// </summary>
         public Plugin()
-            : base(PluginName, 
+            : base(PluginName,
             new VstProductInfo(ProductName, VendorName, PluginVersion),
                 // TODO: what type of plugin are your making?
                 VstPluginCategory.Effect,
                 VstPluginCapabilities.NoSoundInStop,
                 // initial delay: number of samples your plugin lags behind.
-                0, 
-                UniquePluginId)
-        { }
+                0,
+                UniquePluginId) { }
 
         /// <summary>
         /// Gets the audio processor object.
         /// </summary>
-        public DummyAudioProcessor AudioProcessor
-        {
+        public DummyAudioProcessor AudioProcessor {
             get { return GetInstance<DummyAudioProcessor>(); }
         }
+
+        ///// <summary>
+        ///// Gets the audio processor object.
+        ///// </summary>
+        //public AudioProcessor AudioProcessor {
+        //    get { return GetInstance<AudioProcessor>(); }
+        //}
 
         /// <summary>
         /// Gets the midi processor object.
         /// </summary>
-        public MidiProcessor MidiProcessor
-        {
+        public MidiProcessor MidiProcessor {
             get { return GetInstance<MidiProcessor>(); }
         }
 
         /// <summary>
         /// Gets the plugin editor object.
         /// </summary>
-        public PluginEditor PluginEditor
-        {
+        public PluginEditor PluginEditor {
             get { return GetInstance<PluginEditor>(); }
         }
 
         /// <summary>
         /// Gets the plugin programs object.
         /// </summary>
-        public PluginPrograms PluginPrograms
-        {
+        public PluginPrograms PluginPrograms {
             get { return GetInstance<PluginPrograms>(); }
         }
 
@@ -82,15 +82,17 @@ namespace VstNetMidiPlugin
         /// <param name="instance">A previous instance returned by this method. 
         /// When non-null, return a thread-safe version (or wrapper) for the object.</param>
         /// <returns>Returns null when not supported by the plugin.</returns>
-        protected override IVstPluginAudioProcessor CreateAudioProcessor(IVstPluginAudioProcessor instance)
-        {
+        protected override IVstPluginAudioProcessor CreateAudioProcessor(IVstPluginAudioProcessor instance) {
             // Dont expose an AudioProcessor if Midi is output in the MidiProcessor
             if (!MidiProcessor.SyncWithAudioProcessor) return null;
 
-            if (instance == null)
-            {
+            if (instance == null) {
                 return new DummyAudioProcessor(this);
             }
+
+            //if (instance == null) {
+            //    return new AudioProcessor(this);
+            //}
 
             // TODO: implement a thread-safe wrapper.
             return base.CreateAudioProcessor(instance);
@@ -102,10 +104,8 @@ namespace VstNetMidiPlugin
         /// <param name="instance">A previous instance returned by this method. 
         /// When non-null, return a thread-safe version (or wrapper) for the object.</param>
         /// <returns>Returns null when not supported by the plugin.</returns>
-        protected override IVstMidiProcessor CreateMidiProcessor(IVstMidiProcessor instance)
-        {
-            if (instance == null)
-            {
+        protected override IVstMidiProcessor CreateMidiProcessor(IVstMidiProcessor instance) {
+            if (instance == null) {
                 return new MidiProcessor(this);
             }
 
@@ -119,8 +119,7 @@ namespace VstNetMidiPlugin
         /// <param name="instance">A previous instance returned by this method. 
         /// When non-null, return a thread-safe version (or wrapper) for the object.</param>
         /// <returns>Returns null when not supported by the plugin.</returns>
-        protected override IVstPluginMidiSource CreateMidiSource(IVstPluginMidiSource instance)
-        {
+        protected override IVstPluginMidiSource CreateMidiSource(IVstPluginMidiSource instance) {
             // we implement this interface on out midi processor.
             return (IVstPluginMidiSource)MidiProcessor;
         }
@@ -131,10 +130,8 @@ namespace VstNetMidiPlugin
         /// <param name="instance">A previous instance returned by this method. 
         /// When non-null, return a thread-safe version (or wrapper) for the object.</param>
         /// <returns>Returns null when not supported by the plugin.</returns>
-        protected override IVstPluginEditor CreateEditor(IVstPluginEditor instance)
-        {
-            if (instance == null)
-            {
+        protected override IVstPluginEditor CreateEditor(IVstPluginEditor instance) {
+            if (instance == null) {
                 return new PluginEditor(this);
             }
 
@@ -148,10 +145,8 @@ namespace VstNetMidiPlugin
         /// <param name="instance">A previous instance returned by this method. 
         /// When non-null, return a thread-safe version (or wrapper) for the object.</param>
         /// <returns>Returns null when not supported by the plugin.</returns>
-        protected override IVstPluginPrograms CreatePrograms(IVstPluginPrograms instance)
-        {
-            if (instance == null)
-            {
+        protected override IVstPluginPrograms CreatePrograms(IVstPluginPrograms instance) {
+            if (instance == null) {
                 return new PluginPrograms(this);
             }
 

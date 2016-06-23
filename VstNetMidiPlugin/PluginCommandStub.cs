@@ -2,7 +2,7 @@
 using Jacobi.Vst.Framework;
 using Jacobi.Vst.Framework.Plugin;
 
-namespace VstNetMidiPlugin
+namespace Accudrums
 {
     /// <summary>
     /// This object receives all calls from the (unmanaged) host.
