@@ -1,6 +1,10 @@
 ﻿using Jacobi.Vst.Core;
 using Jacobi.Vst.Framework;
 using Jacobi.Vst.Framework.Plugin;
+using Jacobi.Vst.Interop.Host;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Accudrums {
     /// <summary>
@@ -36,5 +40,6 @@ namespace Accudrums {
                 _plugin.MidiProcessor.ProcessCurrentEvents();
             }
         }
+
     }
 }

@@ -66,9 +66,6 @@ namespace Accudrums {
             // a plugin must implement IVstPluginMidiSource or this call will throw an exception.
             IVstMidiProcessor midiHost = _plugin.Host.GetInstance<IVstMidiProcessor>();
 
-            //Hieronder een implementatie van een Audio-Uit of audioprocessor opvragen
-
-
             // always expect some hosts not to support this.
             if (midiHost != null) {
                 VstEventCollection outEvents = new VstEventCollection();
@@ -83,17 +80,27 @@ namespace Accudrums {
                             midiEvent = Gain.ProcessEvent(midiEvent);
                             midiEvent = Transpose.ProcessEvent(midiEvent);
 
-                            //Hier ergens midi noot koppelen aan audio output
+                            //Process Midi Note in SampleManager
+                            if ((midiEvent.Data[0] & 0xF0) == 0x80) {
+                                _plugin.SampleManager.ProcessNoteOffEvent(midiEvent.Data[1]);
+                            }
+
+                            if ((midiEvent.Data[0] & 0xF0) == 0x90) {
+                                // note on with velocity = 0 is a note off
+                                if (MidiHelper.IsNoteOff(midiEvent.Data)) {
+                                    _plugin.SampleManager.ProcessNoteOffEvent(midiEvent.Data[1]);
+                                } else {
+                                    _plugin.SampleManager.ProcessNoteOnEvent(midiEvent.Data[1]);
+                                }
+                            }
+
+                            //Voor output naar scherm
                             if (MidiHelper.IsNoteOn(midiEvent.Data)) {
                                 _plugin.PluginEditor.CurrentNote("ON " + midiEvent.Data[1].ToString() + " " + midiEvent.Data[2].ToString() + " " + midiEvent.Data[3].ToString());
 
                                 if (midiEvent.Data[1] == 60) {
                                     //kickdrum afspelen
                                     _plugin.PluginEditor.PlayKick();
-
-                                    //Audio event hier uitsturen?? hoe??
-                                    SoundPlayer player = new SoundPlayer(@"C:\Github\repositories\AccuDrums\VstNetMidiPlugin\Sounds\bd2.wav");
-                                    player.Play();
                                 }
 
                             } else if (MidiHelper.IsNoteOff(midiEvent.Data)) {
@@ -115,9 +122,6 @@ namespace Accudrums {
                 }
 
                 midiHost.Process(outEvents);
-
-                //Hier events naar een audiohost sturen (denk ik??)
-
             }
 
             // Clear the cache, we've processed the events.

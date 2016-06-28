@@ -39,21 +39,28 @@ namespace Accudrums {
                 VstPluginCapabilities.NoSoundInStop,
                 // initial delay: number of samples your plugin lags behind.
                 0,
-                UniquePluginId) { }
+                UniquePluginId) {
+            SampleManager = new SampleManager();
+        }
 
         /// <summary>
-        /// Gets the audio processor object.
+        /// Gets the sample manager.
         /// </summary>
-        public DummyAudioProcessor AudioProcessor {
-            get { return GetInstance<DummyAudioProcessor>(); }
-        }
+        public SampleManager SampleManager { get; private set; }
 
         ///// <summary>
         ///// Gets the audio processor object.
         ///// </summary>
-        //public AudioProcessor AudioProcessor {
-        //    get { return GetInstance<AudioProcessor>(); }
+        //public DummyAudioProcessor AudioProcessor {
+        //    get { return GetInstance<DummyAudioProcessor>(); }
         //}
+
+        /// <summary>
+        /// Gets the audio processor object.
+        /// </summary>
+        public AudioProcessor AudioProcessor {
+            get { return GetInstance<AudioProcessor>(); }
+        }
 
         /// <summary>
         /// Gets the midi processor object.
@@ -86,13 +93,13 @@ namespace Accudrums {
             // Dont expose an AudioProcessor if Midi is output in the MidiProcessor
             if (!MidiProcessor.SyncWithAudioProcessor) return null;
 
-            if (instance == null) {
-                return new DummyAudioProcessor(this);
-            }
-
             //if (instance == null) {
-            //    return new AudioProcessor(this);
+            //    return new DummyAudioProcessor(this);
             //}
+
+            if (instance == null) {
+                return new AudioProcessor(this);
+            }
 
             // TODO: implement a thread-safe wrapper.
             return base.CreateAudioProcessor(instance);
