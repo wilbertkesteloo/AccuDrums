@@ -3,6 +3,6 @@
 namespace Accudrums.Objects {
     public class Kit {
         public string Name { get; set; }
-        public List<Sample> Samples { get; set; }
+        public Grid Grid { get; set; }
     }
 }

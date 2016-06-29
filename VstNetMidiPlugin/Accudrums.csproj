@@ -90,6 +90,8 @@
     <Compile Include="Dmp\MidiHelper.cs" />
     <Compile Include="Dmp\Transpose.cs" />
     <Compile Include="MidiProcessor.cs" />
+    <Compile Include="Objects\Grid.cs" />
+    <Compile Include="Objects\GridItem.cs" />
     <Compile Include="Objects\Kit.cs" />
     <Compile Include="Objects\Sample.cs" />
     <Compile Include="Plugin.cs" />
@@ -104,19 +106,10 @@
     <Compile Include="UI\AccudrumsBase.Designer.cs">
       <DependentUpon>AccudrumsBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\PluginEditorView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\PluginEditorView.Designer.cs">
-      <DependentUpon>PluginEditorView.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\AccudrumsBase.resx">
       <DependentUpon>AccudrumsBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\PluginEditorView.resx">
-      <DependentUpon>PluginEditorView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

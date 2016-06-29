@@ -94,24 +94,6 @@ namespace Accudrums {
                                 }
                             }
 
-                            //Voor output naar scherm
-                            if (MidiHelper.IsNoteOn(midiEvent.Data)) {
-                                _plugin.PluginEditor.CurrentNote("ON " + midiEvent.Data[1].ToString() + " " + midiEvent.Data[2].ToString() + " " + midiEvent.Data[3].ToString());
-
-                                if (midiEvent.Data[1] == 60) {
-                                    //kickdrum afspelen
-                                    _plugin.PluginEditor.PlayKick();
-                                }
-
-                            } else if (MidiHelper.IsNoteOff(midiEvent.Data)) {
-                                _plugin.PluginEditor.CurrentNote("OFF " + midiEvent.Data[1].ToString() + " " + midiEvent.Data[2].ToString() + " " + midiEvent.Data[3].ToString());
-
-                                if (midiEvent.Data[1] == 60) {
-                                    //kickdrum stoppen
-                                    _plugin.PluginEditor.StopKick();
-                                }
-                            }
-
                             outEvents.Add(midiEvent);
                             break;
                         default:

@@ -5,6 +5,9 @@ using Jacobi.Vst.Framework;
 using Jacobi.Vst.Framework.Common;
 using Accudrums.UI;
 using System.Collections.Generic;
+using Accudrums.Objects;
+using System.Windows.Forms;
+using System.Linq;
 
 namespace Accudrums {
     /// <summary>
@@ -22,6 +25,8 @@ namespace Accudrums {
             _plugin = plugin;
             _view = new WinFormsControlWrapper<AccudrumsBase>();
         }
+
+        public Kit CurrentKit { get; set; }
 
         public Rectangle Bounds {
             get { return _view.Bounds; }
@@ -43,13 +48,13 @@ namespace Accudrums {
             _view.SafeInstance.SetNote(note);
         }
 
-        public void PlayKick() {
-            _view.SafeInstance.PlayKick();
+        public void SetCurrentKitName(string name) {
+            _view.SafeInstance.SetCurrentKitName(name);
         }
 
-        public void StopKick() {
-            _view.SafeInstance.StopKick();
-        }
+        //public void LoadGrid(Grid grid) {
+        //    _view.SafeInstance.LoadGrid(grid);
+        //}
 
         public VstKnobMode KnobMode { get; set; }
 
@@ -63,7 +68,44 @@ namespace Accudrums {
 
             _view.SafeInstance.InitializeParameters(paramList);
 
+            SetCurrentKitName(CurrentKit.Name);
+            LoadGrid(CurrentKit.Grid);
+
+
             _view.Open(hWnd);
+        }
+
+        public void LoadGrid(Grid grid) {
+            List<Button> buttons = new List<Button>();
+
+            int ButtonHeight = 40;
+            int Distance = 20;
+            int start_x = 10;
+            int start_y = 10;
+            int ButtonWidth = (_view.SafeInstance.GetPanelGridWidth() - (Distance * grid.XSize)) / grid.XSize;
+
+            for (int x = 0; x < grid.XSize; x++) {
+                for (int y = 0; y < grid.YSize; y++) {
+                    var gridItem = grid.GridItems.FirstOrDefault(i => i.X == x && i.Y == y);
+                    Button tmpButton = new Button() {
+                        Top = start_x + (x * ButtonHeight + Distance),
+                        Left = start_y + (y * ButtonWidth + Distance),
+                        Width = ButtonWidth,
+                        Height = ButtonHeight,
+                    };
+
+                    tmpButton.Click += (s, e) => { _plugin.SampleManager.ProcessNoteOnEvent(gridItem.Note); };
+
+                    if (gridItem != null) {
+                        tmpButton.Text = gridItem.Name;
+                    }
+
+                    buttons.Add(tmpButton);
+                }
+            }
+
+            _view.SafeInstance.LoadGrid(buttons);
+
         }
 
         public void ProcessIdle() {
