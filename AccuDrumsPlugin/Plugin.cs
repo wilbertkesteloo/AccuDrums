@@ -65,7 +65,7 @@ namespace Accudrums {
                 // initial delay: number of samples your plugin lags behind.
                 0,
                 UniquePluginId) {
-            SampleManager = new SampleManager();
+            SampleManager = new SampleManager(this);
 
             //Load basic Tr909 drumkit
             LoadKit(TR909);

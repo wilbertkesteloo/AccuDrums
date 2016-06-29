@@ -25,8 +25,8 @@
         private void InitializeComponent() {
             this.label1 = new System.Windows.Forms.Label();
             this.lblNote = new System.Windows.Forms.Label();
-            this.pnlButtonGrid = new System.Windows.Forms.Panel();
             this.lblCurrentKit = new System.Windows.Forms.Label();
+            this.pnlButtonGrid = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
             // label1
@@ -48,13 +48,6 @@
             this.lblNote.TabIndex = 2;
             this.lblNote.Text = "Note: ";
             // 
-            // pnlButtonGrid
-            // 
-            this.pnlButtonGrid.Location = new System.Drawing.Point(12, 83);
-            this.pnlButtonGrid.Name = "pnlButtonGrid";
-            this.pnlButtonGrid.Size = new System.Drawing.Size(437, 250);
-            this.pnlButtonGrid.TabIndex = 4;
-            // 
             // lblCurrentKit
             // 
             this.lblCurrentKit.AutoSize = true;
@@ -64,13 +57,20 @@
             this.lblCurrentKit.TabIndex = 5;
             this.lblCurrentKit.Text = "Kit: ";
             // 
+            // pnlButtonGrid
+            // 
+            this.pnlButtonGrid.Location = new System.Drawing.Point(25, 86);
+            this.pnlButtonGrid.Name = "pnlButtonGrid";
+            this.pnlButtonGrid.Size = new System.Drawing.Size(413, 257);
+            this.pnlButtonGrid.TabIndex = 6;
+            // 
             // AccudrumsBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.Controls.Add(this.lblCurrentKit);
             this.Controls.Add(this.pnlButtonGrid);
+            this.Controls.Add(this.lblCurrentKit);
             this.Controls.Add(this.lblNote);
             this.Controls.Add(this.label1);
             this.Name = "AccudrumsBase";
@@ -84,7 +84,7 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblNote;
-        private System.Windows.Forms.Panel pnlButtonGrid;
         private System.Windows.Forms.Label lblCurrentKit;
+        private System.Windows.Forms.FlowLayoutPanel pnlButtonGrid;
     }
 }

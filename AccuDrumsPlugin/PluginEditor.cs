@@ -52,10 +52,6 @@ namespace Accudrums {
             _view.SafeInstance.SetCurrentKitName(name);
         }
 
-        //public void LoadGrid(Grid grid) {
-        //    _view.SafeInstance.LoadGrid(grid);
-        //}
-
         public VstKnobMode KnobMode { get; set; }
 
         public void Open(IntPtr hWnd) {
@@ -71,12 +67,23 @@ namespace Accudrums {
             SetCurrentKitName(CurrentKit.Name);
             LoadGrid(CurrentKit.Grid);
 
-
             _view.Open(hWnd);
         }
 
+        public void SetItemActive(byte note) {
+            _view.SafeInstance.SetItemActive(note);
+        }
+
+        public void SetItemInactive(byte note) {
+            _view.SafeInstance.SetItemInactive(note);
+        }
+
+        /// <summary>
+        /// Loads Grid from the current Kit
+        /// </summary>
+        /// <param name="grid">Contains all the grid information</param>
         public void LoadGrid(Grid grid) {
-            List<Button> buttons = new List<Button>();
+            List<GridButton> buttons = new List<GridButton>();
 
             int ButtonHeight = 40;
             int Distance = 20;
@@ -84,20 +91,22 @@ namespace Accudrums {
             int start_y = 10;
             int ButtonWidth = (_view.SafeInstance.GetPanelGridWidth() - (Distance * grid.XSize)) / grid.XSize;
 
-            for (int x = 0; x < grid.XSize; x++) {
-                for (int y = 0; y < grid.YSize; y++) {
+            for (int y = 0; y < grid.YSize; y++) {
+                for (int x = 0; x < grid.XSize; x++) {
                     var gridItem = grid.GridItems.FirstOrDefault(i => i.X == x && i.Y == y);
-                    Button tmpButton = new Button() {
+                    GridButton tmpButton = new GridButton() {
                         Top = start_x + (x * ButtonHeight + Distance),
                         Left = start_y + (y * ButtonWidth + Distance),
                         Width = ButtonWidth,
                         Height = ButtonHeight,
                     };
 
-                    tmpButton.Click += (s, e) => { _plugin.SampleManager.ProcessNoteOnEvent(gridItem.Note); };
+                    tmpButton.MouseDown += (s, e) => { _plugin.SampleManager.ProcessNoteOnEvent(gridItem.Note); };
+                    tmpButton.MouseUp += (s, e) => { _plugin.SampleManager.ProcessNoteOffEvent(gridItem.Note); };
 
                     if (gridItem != null) {
                         tmpButton.Text = gridItem.Name;
+                        tmpButton.Note = gridItem.Note;
                     }
 
                     buttons.Add(tmpButton);

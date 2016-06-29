@@ -10,9 +10,14 @@ namespace Accudrums {
     /// Manages playback, recording and storing audio samples.
     /// </summary>
     internal class SampleManager {
+        private Plugin _plugin;
         private Dictionary<byte, StereoBuffer> _noteMap = new Dictionary<byte, StereoBuffer>();
 
-        unsafe private StereoBuffer SetSampleBuffer(byte note, string file) {
+        public SampleManager(Plugin plugin) {
+            _plugin = plugin;
+        }
+
+        private StereoBuffer SetSampleBuffer(byte note, string file) {
             var kickbuffer = new StereoBuffer(note);
 
             float[] leftList = null;
@@ -46,6 +51,7 @@ namespace Accudrums {
         /// <param name="noteNo">The midi note number.</param>
         public void ProcessNoteOnEvent(byte noteNo) {
             if (_noteMap.ContainsKey(noteNo)) {
+                _plugin.PluginEditor.SetItemActive(noteNo);
                 _player = new SamplePlayer(_noteMap[noteNo]);
             }
         }
@@ -55,6 +61,7 @@ namespace Accudrums {
         /// </summary>
         /// <param name="noteNo">The midi note number.</param>
         public void ProcessNoteOffEvent(byte noteNo) {
+            _plugin.PluginEditor.SetItemInactive(noteNo);
             if (_player != null && _player.Buffer.NoteNo == noteNo) {
                 _player = null;
             }
