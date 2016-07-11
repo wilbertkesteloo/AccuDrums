@@ -6,7 +6,6 @@ using Jacobi.Vst.Framework.Common;
 using Accudrums.UI;
 using System.Collections.Generic;
 using Accudrums.Objects;
-using System.Windows.Forms;
 using System.Linq;
 
 namespace Accudrums {
@@ -28,6 +27,8 @@ namespace Accudrums {
 
         public Kit CurrentKit { get; set; }
 
+        public List<KitListItem> CurrentComboKits { get; set; }
+
         public Rectangle Bounds {
             get { return _view.Bounds; }
         }
@@ -44,12 +45,14 @@ namespace Accudrums {
             // empty by design
         }
 
-        public void CurrentNote(string note) {
-            _view.SafeInstance.SetNote(note);
-        }
-
         public void SetCurrentKitName(string name) {
             _view.SafeInstance.SetCurrentKitName(name);
+        }
+
+        public void SetCurrentKit(Kit kit) {
+            _plugin.PluginEditor.CurrentKit = kit;
+            LoadGrid(CurrentKit.Grid);
+            SetCurrentKitName(CurrentKit.Name);
         }
 
         public VstKnobMode KnobMode { get; set; }
@@ -64,9 +67,12 @@ namespace Accudrums {
 
             _view.SafeInstance.InitializeParameters(paramList);
 
-            SetCurrentKitName(CurrentKit.Name);
-            LoadGrid(CurrentKit.Grid);
+            _view.SafeInstance.SetListKitsIndexChanged(new EventHandler(lstKits_SelectedIndexChanged));
 
+            LoadGrid(CurrentKit.Grid);
+            LoadKitsCombobox();
+            SetCurrentKitName(CurrentKit.Name);
+            _view.SafeInstance.SetItemInKitListSelected(CurrentKit.Name);
             _view.Open(hWnd);
         }
 
@@ -101,7 +107,7 @@ namespace Accudrums {
                         Height = ButtonHeight,
                     };
 
-                    tmpButton.MouseDown += (s, e) => { _plugin.SampleManager.ProcessNoteOnEvent(gridItem.Note); };
+                    tmpButton.MouseDown += (s, e) => { ProcessGridButtonClick(gridItem.ID); };
                     tmpButton.MouseUp += (s, e) => { _plugin.SampleManager.ProcessNoteOffEvent(gridItem.Note); };
 
                     if (gridItem != null) {
@@ -114,11 +120,38 @@ namespace Accudrums {
             }
 
             _view.SafeInstance.LoadGrid(buttons);
+        }
+
+        public void SetComboBoxKitList(List<Kit> kits) {
+            var items = new List<KitListItem>();
+            foreach (var kit in kits) {
+                items.Add(new KitListItem() { Name = kit.Name, Value = kit.ID });
+            }
+            CurrentComboKits = items;
+        }
+
+
+        public void LoadKitsCombobox() {
+            _view.SafeInstance.LoadKitsCombobox(CurrentComboKits);
+        }
+
+        private void lstKits_SelectedIndexChanged(object sender, System.EventArgs e) {
+            var kit = _view.SafeInstance.GetListKitsSelectedItem();
+            _plugin.KitManager.LoadKitByID((int)kit.Value);
+        }
+
+        private void ProcessGridButtonClick(int id) {
+            GridItem item = CurrentKit.Grid.GridItems.FirstOrDefault(i => i.ID == id);
+
+            //Send note to play bij samplemanager
+            _plugin.SampleManager.ProcessNoteOnEvent(item.Note);
+
+            //Load grid item options panel
 
         }
 
+
         public void ProcessIdle() {
-            // keep your processing short!
             _view.SafeInstance.ProcessIdle();
         }
 

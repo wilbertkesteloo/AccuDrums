@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -89,6 +89,7 @@
     <Compile Include="Dmp\Gain.cs" />
     <Compile Include="Dmp\MidiHelper.cs" />
     <Compile Include="Dmp\Transpose.cs" />
+    <Compile Include="KitManager.cs" />
     <Compile Include="MidiProcessor.cs" />
     <Compile Include="Objects\Grid.cs" />
     <Compile Include="Objects\GridItem.cs" />
@@ -106,10 +107,19 @@
     <Compile Include="UI\AccudrumsBase.Designer.cs">
       <DependentUpon>AccudrumsBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\GridItemDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\GridItemDetails.Designer.cs">
+      <DependentUpon>GridItemDetails.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\AccudrumsBase.resx">
       <DependentUpon>AccudrumsBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\GridItemDetails.resx">
+      <DependentUpon>GridItemDetails.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -124,8 +134,27 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Kits\bd2.wav" />
-    <Content Include="Kits\Crash-Cymbal-1.wav" />
+    <Content Include="Kits\TR-808\Clap.mp3" />
+    <Content Include="Kits\TR-808\Clav.mp3" />
+    <Content Include="Kits\TR-808\Closed Hat.mp3" />
+    <Content Include="Kits\TR-808\Cow Bell.mp3" />
+    <Content Include="Kits\TR-808\Cymbal Short.mp3" />
+    <Content Include="Kits\TR-808\Cymbal.mp3" />
+    <Content Include="Kits\TR-808\Hi Conga.mp3" />
+    <Content Include="Kits\TR-808\Kick Endless.mp3" />
+    <Content Include="Kits\TR-808\Kick Reverse.mp3" />
+    <Content Include="Kits\TR-808\Kick1.mp3" />
+    <Content Include="Kits\TR-808\Kick2.mp3" />
+    <Content Include="Kits\TR-808\Kick3.mp3" />
+    <Content Include="Kits\TR-808\Maracas.mp3" />
+    <Content Include="Kits\TR-808\Mid Conga.mp3" />
+    <Content Include="Kits\TR-808\Open Hat.mp3" />
+    <Content Include="Kits\TR-808\Rim Shot.mp3" />
+    <Content Include="Kits\TR-808\Snare Tom1.mp3" />
+    <Content Include="Kits\TR-808\Snare Tom2.mp3" />
+    <Content Include="Kits\TR-808\Snare1.mp3" />
+    <Content Include="Kits\TR-808\Snare2.mp3" />
+    <Content Include="Kits\TR-808\Tom.mp3" />
     <Content Include="Kits\TR-909\TR909_BD01.wav" />
     <Content Include="Kits\TR-909\TR909_BD02.wav" />
     <Content Include="Kits\TR-909\TR909_BD03.wav" />

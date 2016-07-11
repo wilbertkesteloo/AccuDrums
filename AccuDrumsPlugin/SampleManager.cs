@@ -22,7 +22,7 @@ namespace Accudrums {
 
             float[] leftList = null;
 
-            using (var reader = new WaveFileReader(file)) {
+            using (var reader = new AudioFileReader(file)) {
                 leftList = new float[reader.Length];
                 reader.ToSampleProvider().Read(leftList, 0, leftList.Length);
             }
@@ -75,8 +75,6 @@ namespace Accudrums {
             get { return _player != null; }
         }
 
-        private int playnumber = 0;
-
         /// <summary>
         /// Plays back the current sample buffer
         /// </summary>
@@ -85,9 +83,8 @@ namespace Accudrums {
 
             if (IsPlaying) {
                 _player.Play(channels[0], channels[1]);
-                playnumber++;
 
-                if (_player.IsFinished) {
+                if (_player != null && _player.IsFinished) {
                     _player = null;
                 }
             }
