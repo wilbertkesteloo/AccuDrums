@@ -58,6 +58,8 @@ namespace Accudrums {
             }
         };
 
+        public List<Kit> Kits { get; set; }
+
         public KitManager(Plugin plugin) {
             _plugin = plugin;
 
@@ -70,8 +72,6 @@ namespace Accudrums {
             //Load Kits in UI
             _plugin.PluginEditor.SetComboBoxKitList(Kits);
         }
-
-        public List<Kit> Kits { get; set; }
 
         /// <summary>
         /// Sets up kit in entire application

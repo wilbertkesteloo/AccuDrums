@@ -1,16 +1,13 @@
 ﻿using Jacobi.Vst.Core;
 using Jacobi.Vst.Framework;
 
-namespace Accudrums.Dmp
-{
-    internal sealed class Gain
-    {
+namespace Accudrums.Dmp {
+    internal sealed class Gain {
         private static readonly string ParameterCategoryName = "Gain";
 
         private Plugin _plugin;
 
-        public Gain(Plugin plugin)
-        {
+        public Gain(Plugin plugin) {
             _plugin = plugin;
 
             InitializeParameters();
@@ -18,8 +15,7 @@ namespace Accudrums.Dmp
             _plugin.Opened += new System.EventHandler(Plugin_Opened);
         }
 
-        private void Plugin_Opened(object sender, System.EventArgs e)
-        {
+        private void Plugin_Opened(object sender, System.EventArgs e) {
             GainMgr.HostAutomation = _plugin.Host.GetInstance<IVstHostAutomation>();
 
             _plugin.Opened -= new System.EventHandler(Plugin_Opened);
@@ -27,8 +23,7 @@ namespace Accudrums.Dmp
 
         public VstParameterManager GainMgr { get; private set; }
 
-        private void InitializeParameters()
-        {
+        private void InitializeParameters() {
             // all parameter definitions are added to a central list.
             VstParameterInfoCollection parameterInfos = _plugin.PluginPrograms.ParameterInfos;
 
@@ -55,10 +50,8 @@ namespace Accudrums.Dmp
             parameterInfos.Add(paramInfo);
         }
 
-        public VstMidiEvent ProcessEvent(VstMidiEvent inEvent)
-        {
-            if (!MidiHelper.IsNoteOff(inEvent.Data) && !MidiHelper.IsNoteOn(inEvent.Data))
-            {
+        public VstMidiEvent ProcessEvent(VstMidiEvent inEvent) {
+            if (!MidiHelper.IsNoteOff(inEvent.Data) && !MidiHelper.IsNoteOn(inEvent.Data)) {
                 return inEvent;
             }
 
@@ -67,18 +60,16 @@ namespace Accudrums.Dmp
 
             outData[2] += (byte)GainMgr.CurrentValue;
 
-            if (outData[2] > 127)
-            {
+            if (outData[2] > 127) {
                 outData[2] = 127;
             }
 
-            if (outData[2] < 0)
-            {
+            if (outData[2] < 0) {
                 outData[2] = 0;
             }
 
             VstMidiEvent outEvent = new VstMidiEvent(
-                inEvent.DeltaFrames, inEvent.NoteLength, inEvent.NoteOffset, 
+                inEvent.DeltaFrames, inEvent.NoteLength, inEvent.NoteOffset,
                 outData, inEvent.Detune, inEvent.NoteOffVelocity);
 
             return outEvent;

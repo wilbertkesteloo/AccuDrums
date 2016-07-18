@@ -9,6 +9,7 @@ namespace Accudrums.UI {
     public partial class AccudrumsBase : UserControl {
 
         private Color activeColor;
+
         private Color inactiveColor;
 
         public object DataSource { get; private set; }
@@ -94,6 +95,10 @@ namespace Accudrums.UI {
                     lstKits.SelectedItem = item;
                 }
             }
+        }
+
+        public void SetGridItemDetailsControl(Objects.GridItem gridItem) {
+            gridItemDetails.SetGridItem(gridItem);
         }
 
     }

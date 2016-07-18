@@ -17,45 +17,30 @@ namespace Accudrums {
     /// your Parameters will be displayed in an editor provided by the host.
     /// </remarks>
     internal sealed class PluginEditor : IVstPluginEditor {
+
+        #region Declarations
+
         private Plugin _plugin;
         private WinFormsControlWrapper<AccudrumsBase> _view;
+
+        public Kit CurrentKit { get; set; }
+
+        public GridItem SelectedGridItem {get;set;}
+
+        public List<KitListItem> CurrentComboKits { get; set; }
+
+        public Rectangle Bounds { get { return _view.Bounds; } }
+
+        public VstKnobMode KnobMode { get; set; }
+
+        #endregion
+
+        #region Constructor & Inherited Methods
 
         public PluginEditor(Plugin plugin) {
             _plugin = plugin;
             _view = new WinFormsControlWrapper<AccudrumsBase>();
         }
-
-        public Kit CurrentKit { get; set; }
-
-        public List<KitListItem> CurrentComboKits { get; set; }
-
-        public Rectangle Bounds {
-            get { return _view.Bounds; }
-        }
-
-        public void Close() {
-            _view.Close();
-        }
-
-        public void KeyDown(byte ascii, VstVirtualKey virtualKey, VstModifierKeys modifers) {
-            // empty by design
-        }
-
-        public void KeyUp(byte ascii, VstVirtualKey virtualKey, VstModifierKeys modifers) {
-            // empty by design
-        }
-
-        public void SetCurrentKitName(string name) {
-            _view.SafeInstance.SetCurrentKitName(name);
-        }
-
-        public void SetCurrentKit(Kit kit) {
-            _plugin.PluginEditor.CurrentKit = kit;
-            LoadGrid(CurrentKit.Grid);
-            SetCurrentKitName(CurrentKit.Name);
-        }
-
-        public VstKnobMode KnobMode { get; set; }
 
         public void Open(IntPtr hWnd) {
             // make a list of parameters to pass to the dlg.
@@ -72,8 +57,35 @@ namespace Accudrums {
             LoadGrid(CurrentKit.Grid);
             LoadKitsCombobox();
             SetCurrentKitName(CurrentKit.Name);
+            SetGridItemsDetails(SelectedGridItem);
             _view.SafeInstance.SetItemInKitListSelected(CurrentKit.Name);
             _view.Open(hWnd);
+        }
+
+        public void Close() {
+            _view.Close();
+        }
+
+        public void ProcessIdle() {
+            _view.SafeInstance.ProcessIdle();
+        }
+
+        #endregion
+
+        #region Methods
+
+        public void SetCurrentKitName(string name) {
+            _view.SafeInstance.SetCurrentKitName(name);
+        }
+
+        public void SetCurrentKit(Kit kit) {
+            _plugin.PluginEditor.CurrentKit = kit;
+            LoadGrid(CurrentKit.Grid);
+            SetCurrentKitName(CurrentKit.Name);
+
+            //When new kit is loaded. automaticly set first grid item details
+            SelectedGridItem = CurrentKit.Grid.GridItems.FirstOrDefault();
+            SetGridItemsDetails(SelectedGridItem);
         }
 
         public void SetItemActive(byte note) {
@@ -106,11 +118,11 @@ namespace Accudrums {
                         Width = ButtonWidth,
                         Height = ButtonHeight,
                     };
-
-                    tmpButton.MouseDown += (s, e) => { ProcessGridButtonClick(gridItem.ID); };
-                    tmpButton.MouseUp += (s, e) => { _plugin.SampleManager.ProcessNoteOffEvent(gridItem.Note); };
-
+                     
                     if (gridItem != null) {
+                        tmpButton.MouseDown += (s, e) => { ProcessGridButtonClick(gridItem.ID); };
+                        tmpButton.MouseUp += (s, e) => { _plugin.SampleManager.ProcessNoteOffEvent(gridItem.Note); };
+
                         tmpButton.Text = gridItem.Name;
                         tmpButton.Note = gridItem.Note;
                     }
@@ -130,10 +142,17 @@ namespace Accudrums {
             CurrentComboKits = items;
         }
 
-
-        public void LoadKitsCombobox() {
+        private void LoadKitsCombobox() {
             _view.SafeInstance.LoadKitsCombobox(CurrentComboKits);
         }
+
+        private void SetGridItemsDetails(GridItem griditem) {
+            _view.SafeInstance.SetGridItemDetailsControl(griditem);
+        }
+
+        #endregion
+
+        #region EventHandlers
 
         private void lstKits_SelectedIndexChanged(object sender, System.EventArgs e) {
             var kit = _view.SafeInstance.GetListKitsSelectedItem();
@@ -143,16 +162,23 @@ namespace Accudrums {
         private void ProcessGridButtonClick(int id) {
             GridItem item = CurrentKit.Grid.GridItems.FirstOrDefault(i => i.ID == id);
 
+            //if unused gridItem no Sample and details
+            if (item == null) return;
+
             //Send note to play bij samplemanager
             _plugin.SampleManager.ProcessNoteOnEvent(item.Note);
 
             //Load grid item options panel
-
+            SelectedGridItem = item;
+            SetGridItemsDetails(item);
         }
 
+        public void KeyDown(byte ascii, VstVirtualKey virtualKey, VstModifierKeys modifers) {
+            // empty by design
+        }
 
-        public void ProcessIdle() {
-            _view.SafeInstance.ProcessIdle();
+        public void KeyUp(byte ascii, VstVirtualKey virtualKey, VstModifierKeys modifers) {
+            // empty by design
         }
 
         bool IVstPluginEditor.KeyDown(byte ascii, VstVirtualKey virtualKey, VstModifierKeys modifers) {
@@ -162,5 +188,7 @@ namespace Accudrums {
         bool IVstPluginEditor.KeyUp(byte ascii, VstVirtualKey virtualKey, VstModifierKeys modifers) {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

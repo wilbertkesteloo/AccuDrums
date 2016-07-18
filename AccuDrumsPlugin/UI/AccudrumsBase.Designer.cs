@@ -26,7 +26,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblCurrentKit = new System.Windows.Forms.Label();
             this.pnlButtonGrid = new System.Windows.Forms.FlowLayoutPanel();
-            this.gridItemDetails1 = new Accudrums.UI.GridItemDetails();
+            this.gridItemDetails = new Accudrums.UI.GridItemDetails();
             this.lstKits = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
@@ -56,12 +56,12 @@
             this.pnlButtonGrid.Size = new System.Drawing.Size(760, 210);
             this.pnlButtonGrid.TabIndex = 6;
             // 
-            // gridItemDetails1
+            // gridItemDetails
             // 
-            this.gridItemDetails1.Location = new System.Drawing.Point(25, 320);
-            this.gridItemDetails1.Name = "gridItemDetails1";
-            this.gridItemDetails1.Size = new System.Drawing.Size(760, 149);
-            this.gridItemDetails1.TabIndex = 7;
+            this.gridItemDetails.Location = new System.Drawing.Point(25, 320);
+            this.gridItemDetails.Name = "gridItemDetails";
+            this.gridItemDetails.Size = new System.Drawing.Size(760, 149);
+            this.gridItemDetails.TabIndex = 7;
             // 
             // lstKits
             // 
@@ -77,7 +77,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.Controls.Add(this.lstKits);
-            this.Controls.Add(this.gridItemDetails1);
+            this.Controls.Add(this.gridItemDetails);
             this.Controls.Add(this.pnlButtonGrid);
             this.Controls.Add(this.lblCurrentKit);
             this.Controls.Add(this.label1);
@@ -93,7 +93,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblCurrentKit;
         private System.Windows.Forms.FlowLayoutPanel pnlButtonGrid;
-        private GridItemDetails gridItemDetails1;
+        private GridItemDetails gridItemDetails;
         private System.Windows.Forms.ComboBox lstKits;
     }
 }

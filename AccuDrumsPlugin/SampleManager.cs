@@ -82,6 +82,17 @@ namespace Accudrums {
         public void PlayAudio(VstAudioBuffer[] channels) {
 
             if (IsPlaying) {
+
+                //Add effects per gridItem here (gain, panning)
+                //per effect waarschijnlijk class schrijven die de verschillende channels processed
+                //Hier is ook informatie nodig van de CurrentKit uit de kitmanager
+
+                //Gain
+
+
+
+                //Panning
+
                 _player.Play(channels[0], channels[1]);
 
                 if (_player != null && _player.IsFinished) {
@@ -120,6 +131,28 @@ namespace Accudrums {
             public bool IsFinished {
                 get { return (_bufferIndex >= Buffer.LeftSamples.Count); }
             }
+        }
+
+
+        private byte[] adjustVolume(byte[] audioSamples, float volume) {
+            byte[] array = new byte[audioSamples.Length];
+            for (int i = 0; i < array.Length; i += 2) {
+                // convert byte pair to int
+                short buf1 = audioSamples[i + 1];
+                short buf2 = audioSamples[i];
+
+                buf1 = (short)((buf1 & 0xff) << 8);
+                buf2 = (short)(buf2 & 0xff);
+
+                short res = (short)(buf1 | buf2);
+                res = (short)(res * volume);
+
+                // convert back
+                array[i] = (byte)res;
+                array[i + 1] = (byte)(res >> 8);
+
+            }
+            return array;
         }
 
         //---------------------------------------------------------------------

@@ -8,5 +8,8 @@ namespace Accudrums.Objects {
         public int Y { get; set; }
         public byte Note { get; set; }
         public List<Sample> Samples { get; set; }
+
+        public float Gain { get; set; } 
+        public int Panning { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Jacobi.Vst.Core;
-using Jacobi.Vst.Framework;
 using Jacobi.Vst.Framework.Plugin;
 
 namespace Accudrums {
@@ -26,8 +25,7 @@ namespace Accudrums {
 
             if (_plugin.SampleManager.IsPlaying) {
                 _plugin.SampleManager.PlayAudio(outChannels);
-            } else // audio thru
-              {
+            } else {
                 VstAudioBuffer input = inChannels[0];
                 VstAudioBuffer output = outChannels[0];
 
