@@ -11,37 +11,19 @@ namespace Accudrums {
     /// </summary>
     internal class SampleManager {
         private Plugin _plugin;
-        private Dictionary<byte, StereoBuffer> _noteMap = new Dictionary<byte, StereoBuffer>();
+        private Dictionary<byte, GridItem> _noteMap = new Dictionary<byte, GridItem>();
+        private List<StereoBuffer> _stereoBuffers = new List<StereoBuffer>();
 
         public SampleManager(Plugin plugin) {
             _plugin = plugin;
-        }
-
-        private StereoBuffer SetSampleBuffer(byte note, string file) {
-            var kickbuffer = new StereoBuffer(note);
-
-            float[] leftList = null;
-
-            using (var reader = new AudioFileReader(file)) {
-                leftList = new float[reader.Length];
-                reader.ToSampleProvider().Read(leftList, 0, leftList.Length);
-            }
-
-            //readWav(file, out leftList, out richtList);
-            if (leftList != null) {
-                kickbuffer.LeftSamples = leftList.ToList();
-                kickbuffer.RightSamples = leftList.ToList();
-            }
-
-            return kickbuffer;
         }
 
         internal void LoadSamples(List<GridItem> gridItems) {
             _noteMap.Clear();
 
             foreach (var gridItem in gridItems) {
-                var buffer = SetSampleBuffer(gridItem.Note, gridItem.Samples.FirstOrDefault().File);
-                _noteMap.Add(gridItem.Note, buffer);
+                _noteMap.Add(gridItem.Note, gridItem);
+                _stereoBuffers.Add(CreateSampleBuffer(gridItem.ID, gridItem.Samples.FirstOrDefault().File));
             }
         }
 
@@ -52,7 +34,11 @@ namespace Accudrums {
         public void ProcessNoteOnEvent(byte noteNo) {
             if (_noteMap.ContainsKey(noteNo)) {
                 _plugin.PluginEditor.SetItemActive(noteNo);
-                _player = new SamplePlayer(_noteMap[noteNo]);
+
+                var gridItem = _noteMap[noteNo];
+                var stereobuffer = _stereoBuffers.FirstOrDefault(b => b.GridItemId == gridItem.ID);
+                
+                _player = new SamplePlayer(gridItem, stereobuffer);
             }
         }
 
@@ -62,7 +48,9 @@ namespace Accudrums {
         /// <param name="noteNo">The midi note number.</param>
         public void ProcessNoteOffEvent(byte noteNo) {
             _plugin.PluginEditor.SetItemInactive(noteNo);
-            if (_player != null && _player.Buffer.NoteNo == noteNo) {
+
+            var gridItem = _noteMap[noteNo];
+            if (_player != null && _player.Buffer.GridItemId == gridItem.ID) {
                 _player = null;
             }
         }
@@ -82,17 +70,6 @@ namespace Accudrums {
         public void PlayAudio(VstAudioBuffer[] channels) {
 
             if (IsPlaying) {
-
-                //Add effects per gridItem here (gain, panning)
-                //per effect waarschijnlijk class schrijven die de verschillende channels processed
-                //Hier is ook informatie nodig van de CurrentKit uit de kitmanager
-
-                //Gain
-
-
-
-                //Panning
-
                 _player.Play(channels[0], channels[1]);
 
                 if (_player != null && _player.IsFinished) {
@@ -102,31 +79,81 @@ namespace Accudrums {
         }
 
         /// <summary>
+        /// Returns a Stereobuffer class by input of a file
+        /// </summary>
+        /// <param name="note">note (nog nodig?)</param>
+        /// <param name="file">location of audio file</param>
+        /// <returns></returns>
+        private StereoBuffer CreateSampleBuffer(int gridItemId, string file) {
+            var kickbuffer = new StereoBuffer(gridItemId);
+
+            float[] leftList = null;
+
+            using (var reader = new AudioFileReader(file)) {
+                leftList = new float[reader.Length];
+                reader.ToSampleProvider().Read(leftList, 0, leftList.Length);
+            }
+
+            //readWav(file, out leftList, out richtList);
+            if (leftList != null) {
+                kickbuffer.LeftSamples = leftList.ToList();
+                kickbuffer.RightSamples = leftList.ToList();
+            }
+
+            return kickbuffer;
+        }
+
+        /// <summary>
         /// Manages playing back a sample buffer
         /// </summary>
         private class SamplePlayer {
-            public SamplePlayer(StereoBuffer buffer) {
-                Buffer = buffer;
-            }
 
             private int _bufferIndex;
             public StereoBuffer Buffer { get; private set; }
+            public GridItem GridItem { get; private set; }
+
+            public SamplePlayer(GridItem gridItem, StereoBuffer buffer) {
+                GridItem = gridItem;
+                Buffer = buffer;
+            }
 
             public void Play(VstAudioBuffer left, VstAudioBuffer right) {
                 if (IsFinished) return;
 
+                //Add effects per gridItem here (gain, panning)
+                //per effect waarschijnlijk class schrijven die de verschillende channels processed
+                //Hier is ook informatie nodig van de CurrentKit uit de kitmanager
+
                 int count = Math.Min(left.SampleCount, Buffer.LeftSamples.Count - _bufferIndex);
+                double gain_factor = Math.Pow(10.0, GridItem.Gain / 20.0);
+
 
                 for (int index = 0; index < count; index++) {
-                    left[index] = Buffer.LeftSamples[_bufferIndex + index];
+                    float signal = Buffer.LeftSamples[_bufferIndex + index];
+
+                    //Add Gain
+                    signal = signal * (float)gain_factor;
+
+                    //Panning
+
+
+                    left[index] = signal;
                 }
 
                 for (int index = 0; index < count; index++) {
-                    right[index] = Buffer.RightSamples[_bufferIndex + index];
+                    float signal = Buffer.RightSamples[_bufferIndex + index];
+                    //Add Gain
+                    signal = signal * (float)gain_factor;
+
+
+                    //Panning
+
+                    right[index] = signal;
                 }
 
                 _bufferIndex += left.SampleCount;
             }
+
 
             public bool IsFinished {
                 get { return (_bufferIndex >= Buffer.LeftSamples.Count); }
@@ -161,11 +188,11 @@ namespace Accudrums {
         /// Manages a stereo sample buffer for a specific note number.
         /// </summary>
         private class StereoBuffer {
-            public StereoBuffer(byte noteNo) {
-                NoteNo = noteNo;
+            public StereoBuffer(int gridItemID) {
+                GridItemId = gridItemID;
             }
 
-            public byte NoteNo;
+            public int GridItemId;
             public List<float> LeftSamples = new List<float>();
             public List<float> RightSamples = new List<float>();
         }
