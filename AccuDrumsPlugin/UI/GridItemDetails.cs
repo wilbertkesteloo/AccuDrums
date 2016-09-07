@@ -23,16 +23,17 @@ namespace Accudrums.UI {
             tbGain.Value = (int)(currentItem.Gain * 100);
 
             //Set Panning
-            tbPanning.Value = currentItem.Panning;
+            tbPanning.Value = (int)currentItem.Panning;
+            this.label1.Text = "panning: " + currentItem.Panning;
         }
 
         private void tbGain_ValueChanged(object sender, System.EventArgs e) {
-            float value = tbGain.Value / 100;
-            currentItem.Gain = value;
+            currentItem.Gain = tbGain.Value / 100;
         }
 
         private void tbPanning_ValueChanged(object sender, System.EventArgs e) {
             currentItem.Panning = tbPanning.Value;
+            this.label1.Text = "panning: " + currentItem.Panning;
         }
     }
 }

@@ -28,6 +28,7 @@
             this.lblGain = new System.Windows.Forms.Label();
             this.lblPanning = new System.Windows.Forms.Label();
             this.tbPanning = new System.Windows.Forms.TrackBar();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tbGain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPanning)).BeginInit();
             this.SuspendLayout();
@@ -44,8 +45,8 @@
             // tbGain
             // 
             this.tbGain.Location = new System.Drawing.Point(26, 40);
-            this.tbGain.Maximum = 600;
-            this.tbGain.Minimum = -600;
+            this.tbGain.Maximum = 1200;
+            this.tbGain.Minimum = -3200;
             this.tbGain.Name = "tbGain";
             this.tbGain.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.tbGain.Size = new System.Drawing.Size(45, 94);
@@ -81,10 +82,20 @@
             this.tbPanning.TabIndex = 5;
             this.tbPanning.ValueChanged += new System.EventHandler(this.tbPanning_ValueChanged);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(220, 60);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(54, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "panning : ";
+            // 
             // GridItemDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.tbPanning);
             this.Controls.Add(this.lblPanning);
             this.Controls.Add(this.lblGain);
@@ -105,5 +116,6 @@
         private System.Windows.Forms.Label lblGain;
         private System.Windows.Forms.Label lblPanning;
         private System.Windows.Forms.TrackBar tbPanning;
+        private System.Windows.Forms.Label label1;
     }
 }

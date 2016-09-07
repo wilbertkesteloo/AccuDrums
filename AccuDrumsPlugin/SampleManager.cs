@@ -127,6 +127,9 @@ namespace Accudrums {
                 int count = Math.Min(left.SampleCount, Buffer.LeftSamples.Count - _bufferIndex);
                 double gain_factor = Math.Pow(10.0, GridItem.Gain / 20.0);
 
+                float dividingfactor = 120;
+                double panfactorLeft = Math.Pow(10.0, (GridItem.Panning * dividingfactor) / 20.0);
+                double panfactorRight = Math.Pow(10.0, (GridItem.Panning * dividingfactor) / 20.0);
 
                 for (int index = 0; index < count; index++) {
                     float signal = Buffer.LeftSamples[_bufferIndex + index];
@@ -135,7 +138,16 @@ namespace Accudrums {
                     signal = signal * (float)gain_factor;
 
                     //Panning
+                   // signal = signal - (GridItem.Panning / 2);
+                    
 
+                    //if (GridItem.Panning > 0) {
+                    //    if (GridItem.Panning == 1) {
+                    //        signal = signal * float.MinValue;
+                    //    } else {
+                    //        signal = signal * (float)panfactorLeft;
+                    //    }
+                    //}
 
                     left[index] = signal;
                 }
@@ -145,8 +157,16 @@ namespace Accudrums {
                     //Add Gain
                     signal = signal * (float)gain_factor;
 
-
                     //Panning
+                   //  signal = signal + (GridItem.Panning / 2);
+
+                    //if (GridItem.Panning < 0) {
+                    //    if (GridItem.Panning == -1) {
+                    //        signal = signal * float.MinValue;
+                    //    } else {
+                    //        signal = signal * (float)panfactorLeft;
+                    //    }
+                    //}
 
                     right[index] = signal;
                 }
