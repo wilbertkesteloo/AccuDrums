@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace Accudrums.UI {
     public partial class GridItemDetails : UserControl {
@@ -23,7 +24,7 @@ namespace Accudrums.UI {
             tbGain.Value = (int)(currentItem.Gain * 100);
 
             //Set Panning
-            tbPanning.Value = (int)currentItem.Panning;
+            tbPanning.Value = (int)(currentItem.Panning * 100);
             this.label1.Text = "panning: " + currentItem.Panning;
         }
 
@@ -32,7 +33,8 @@ namespace Accudrums.UI {
         }
 
         private void tbPanning_ValueChanged(object sender, System.EventArgs e) {
-            currentItem.Panning = tbPanning.Value;
+            float value = tbPanning.Value;
+            currentItem.Panning = value / 100;
             this.label1.Text = "panning: " + currentItem.Panning;
         }
     }

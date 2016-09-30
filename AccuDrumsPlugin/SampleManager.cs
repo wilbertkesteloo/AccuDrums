@@ -138,9 +138,11 @@ namespace Accudrums {
                     signal = signal * (float)gain_factor;
 
                     //Panning
-                   // signal = signal - (GridItem.Panning / 2);
-                    
 
+                    //Optie 1
+                    //ignal = signal - (GridItem.Panning / 2);
+
+                    //Optie 2
                     //if (GridItem.Panning > 0) {
                     //    if (GridItem.Panning == 1) {
                     //        signal = signal * float.MinValue;
@@ -148,6 +150,11 @@ namespace Accudrums {
                     //        signal = signal * (float)panfactorLeft;
                     //    }
                     //}
+
+                    //pan a mono audio source into stereo
+                    //x is a numpy array, angle is the angle in radiants
+                    double angle = GridItem.Panning * 100;
+                    signal = (float)(Math.Sqrt(2) / 2.0 * (Math.Cos(angle) + Math.Sin(angle)) * signal);
 
                     left[index] = signal;
                 }
@@ -158,15 +165,22 @@ namespace Accudrums {
                     signal = signal * (float)gain_factor;
 
                     //Panning
-                   //  signal = signal + (GridItem.Panning / 2);
 
+                    //Optie 1
+                    //signal = signal + (GridItem.Panning / 2);
+
+                    //Optie 2
                     //if (GridItem.Panning < 0) {
                     //    if (GridItem.Panning == -1) {
                     //        signal = signal * float.MinValue;
                     //    } else {
-                    //        signal = signal * (float)panfactorLeft;
+                    //        signal = signal * (float)panfactorRight;
                     //    }
                     //}
+
+                    //Optie 3
+                    double angle = GridItem.Panning * 100;
+                    signal = (float)(Math.Sqrt(2) / 2.0 * (Math.Cos(angle) - Math.Sin(angle)) * signal);
 
                     right[index] = signal;
                 }
